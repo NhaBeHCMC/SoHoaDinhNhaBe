@@ -1,0 +1,57 @@
+.page {
+  min-height: calc(100dvh - var(--header-height-compact));
+  background: var(--color-parchment);
+}
+
+.titleBar {
+  position: relative;
+  z-index: var(--z-raised);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-2xs);
+  padding: var(--space-sm) clamp(var(--space-md), 4vw, var(--space-xl));
+  border-block-end: var(--rule-hairline);
+  background: var(--color-paper-soft);
+}
+
+.titleBar a {
+  justify-self: start;
+  color: var(--color-lacquer);
+  font-size: var(--text-sm);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.titleBar h1,
+.titleBar p {
+  margin: 0;
+}
+
+.titleBar h1 {
+  min-width: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.35rem, 2vw, 2rem);
+  font-style: normal;
+  line-height: 1.16;
+  overflow-wrap: anywhere;
+}
+
+.titleBar p {
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+@media (min-width: 54rem) {
+  .titleBar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .titleBar a {
+    order: 0;
+  }
+
+  .titleBar h1 {
+    text-align: center;
+  }
+}

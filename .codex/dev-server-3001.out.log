@@ -1,0 +1,19 @@
+
+> cong-trinh-so-hoa-dinh-phu-xuan@0.1.0 dev
+> next dev --port 3001
+
+   ▲ Next.js 15.5.20
+   - Local:        http://localhost:3001
+   - Network:      http://192.168.21.1:3001
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 7.8s
+ ○ Compiling / ...
+ ✓ Compiled / in 7.6s (741 modules)
+ GET / 200 in 8447ms
+ ○ Compiling /ban-do/[slug] ...
+ ✓ Compiled /ban-do/[slug] in 3.3s (745 modules)
+ GET /ban-do/dinh-phu-xuan 200 in 5217ms
+ GET / 200 in 143ms
+[?25h

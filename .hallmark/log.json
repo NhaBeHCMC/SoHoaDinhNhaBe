@@ -1,0 +1,14 @@
+[
+  {
+    "date": "2026-07-19",
+    "scope": "app",
+    "macrostructure": "Map / Diagram",
+    "theme": "custom",
+    "theme_axes": "light / roman-serif / warm",
+    "vibe": "archival Vietnamese heritage, lacquer, bronze",
+    "enrichment": "existing map image",
+    "brief": "Rebuild Dinh Phu Xuan digital heritage map as reusable 9-map platform",
+    "nav": "N6 masthead adapted to compact heritage header",
+    "footer": "Ft5 statement"
+  }
+]

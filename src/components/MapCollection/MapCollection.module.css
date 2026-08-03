@@ -1,0 +1,108 @@
+.section {
+  display: grid;
+  gap: var(--space-xl);
+  padding: var(--space-2xl) clamp(var(--space-md), 4vw, var(--space-2xl));
+  background: var(--color-paper);
+}
+
+.heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-md);
+  max-width: 74rem;
+}
+
+.heading h2 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 3vw, 3.4rem);
+  font-style: normal;
+  line-height: 1.1;
+}
+
+.heading p {
+  max-width: 58ch;
+  margin: 0;
+  color: var(--color-ink-soft);
+  font-size: var(--text-md);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: var(--space-md);
+}
+
+.card {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: clip;
+  border: var(--rule-hairline);
+  border-radius: var(--radius-md);
+  background: var(--color-paper-soft);
+}
+
+.card[data-status="planned"] {
+  background: var(--color-parchment);
+}
+
+.card img,
+.imagePlaceholder {
+  display: block;
+  aspect-ratio: 3 / 2;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-block-end: var(--rule-hairline);
+}
+
+.imagePlaceholder {
+  background: var(--color-parchment-deep);
+}
+
+.cardBody {
+  display: grid;
+  align-content: start;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+}
+
+.card h3,
+.card p {
+  margin: 0;
+}
+
+.card h3 {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-style: normal;
+  line-height: 1.2;
+}
+
+.card p {
+  color: var(--color-ink-soft);
+}
+
+.card a,
+.card span {
+  justify-self: start;
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  color: var(--color-lacquer);
+  font-weight: 800;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+.card span {
+  color: var(--color-muted);
+}
+
+@media (min-width: 52rem) {
+  .heading {
+    grid-template-columns: minmax(18rem, 0.8fr) minmax(0, 1fr);
+    align-items: end;
+  }
+}

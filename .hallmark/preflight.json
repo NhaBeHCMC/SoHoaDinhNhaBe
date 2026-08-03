@@ -1,0 +1,16 @@
+{
+  "date": "2026-07-19",
+  "framework_before": "vanilla HTML",
+  "framework_after": "Next.js App Router",
+  "font_stack_before": "sans-serif inline CSS",
+  "font_stack_after": "Noto Serif heading, Be Vietnam Pro body via tokens",
+  "palette_before": "hard-coded red, white, gray values",
+  "palette_after": "central OKLCH heritage tokens",
+  "motion": "motion-cut with purposeful panel, menu, marker and lightbox transitions",
+  "spacing": "4pt token scale",
+  "notes": [
+    "index.html and script.js preserved",
+    "optimized assets copied to public/legacy-assets",
+    "Leaflet initialized client-side only"
+  ]
+}

@@ -1,0 +1,83 @@
+/* Hallmark · macrostructure: Map / Diagram · genre: editorial · tone: heritage Vietnamese · anchor hue: lacquer-red
+ * theme: custom · vibe: "archival Vietnamese heritage, lacquer, bronze" · paper: oklch(96% 0.018 78) · accent: oklch(36% 0.130 28)
+ * display: Noto Serif · body: Be Vietnam Pro · axes: light / roman-serif / warm · pre-emit critique: P5 H4 E4 S5 R5 V4
+ */
+:root {
+  --color-paper: oklch(96% 0.018 78);
+  --color-paper-soft: oklch(98% 0.014 78);
+  --color-parchment: oklch(93% 0.024 76);
+  --color-parchment-deep: oklch(89% 0.032 75);
+  --color-ink: oklch(20% 0.018 55);
+  --color-ink-soft: oklch(35% 0.018 55);
+  --color-muted: oklch(48% 0.014 55);
+  --color-rule: oklch(74% 0.026 72);
+  --color-rule-strong: oklch(62% 0.050 74);
+  --color-lacquer: oklch(36% 0.130 28);
+  --color-lacquer-deep: oklch(26% 0.092 28);
+  --color-dark-wood: oklch(25% 0.042 50);
+  --color-wood: oklch(36% 0.055 53);
+  --color-antique-gold: oklch(64% 0.085 75);
+  --color-gold-soft: oklch(80% 0.060 78);
+  --color-focus: oklch(56% 0.175 38);
+  --color-accent-ink: oklch(96% 0.018 78);
+  --color-success: oklch(42% 0.095 145);
+  --color-error: oklch(48% 0.160 28);
+  --color-map-panel: oklch(97% 0.018 78 / 0.96);
+  --color-overlay: oklch(18% 0.030 50 / 0.72);
+
+  --font-heading: "Noto Serif", "Source Serif 4", "Times New Roman", ui-serif, serif;
+  --font-body: "Be Vietnam Pro", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-han: "Noto Serif CJK SC", "Noto Serif", "SimSun", serif;
+
+  --space-3xs: 0.125rem;
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.125rem;
+  --text-lg: 1.375rem;
+  --text-xl: 1.75rem;
+  --text-2xl: 2.25rem;
+  --text-3xl: 3rem;
+  --text-display: clamp(2.5rem, 4vw + 1rem, 5rem);
+
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-panel: 0.5rem;
+  --radius-pill: 999rem;
+
+  --rule-hairline: 1px solid var(--color-rule);
+  --rule-strong: 1px solid var(--color-rule-strong);
+
+  --shadow-whisper: 0 1px 2px oklch(20% 0.018 55 / 0.08);
+  --shadow-panel: 0 18px 42px oklch(20% 0.018 55 / 0.18);
+  --shadow-modal: 0 24px 80px oklch(16% 0.025 55 / 0.34);
+  --shadow-marker: 0 4px 12px oklch(20% 0.018 55 / 0.32);
+
+  --z-base: 1;
+  --z-raised: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-tooltip: 600;
+
+  --header-height: 4.5rem;
+  --header-height-compact: 3.75rem;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+}

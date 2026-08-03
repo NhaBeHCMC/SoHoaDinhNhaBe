@@ -1,0 +1,183 @@
+/* Hallmark · component: heritage hero · genre: editorial · macrostructure: Photographic · enrichment: E8 heritage photography
+ * pre-emit critique: P5 H5 E5 S5 R5 V5 · contrast: pass (40–41) · slop: pass (42–45)
+ * honest: pass (46) · chrome: pass (47) · tokens: pass (48) · responsive: pass (49) · mobile: pass (34, 49, 50–57)
+ */
+.hero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  min-height: clamp(34rem, 72svh, 46rem);
+  overflow: hidden;
+  background: var(--color-dark-wood);
+  color: var(--color-paper-soft);
+}
+
+.backgroundImage {
+  z-index: -2;
+  object-fit: cover;
+  object-position: center 48%;
+  filter: saturate(0.88) contrast(1.04);
+}
+
+.veil {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: var(--color-overlay);
+  opacity: 0.82;
+}
+
+.inner {
+  display: grid;
+  width: 100%;
+  max-width: 90rem;
+  min-height: inherit;
+  margin-inline: auto;
+  padding: clamp(var(--space-xl), 7svh, var(--space-2xl))
+    clamp(var(--space-md), 5vw, var(--space-3xl))
+    clamp(var(--space-2xl), 10svh, var(--space-3xl));
+}
+
+.copy {
+  align-self: center;
+  max-width: 48rem;
+}
+
+.copy h1 {
+  min-width: 0;
+  margin: 0;
+  color: var(--color-paper-soft);
+  font-family: var(--font-heading);
+  font-size: var(--text-display);
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.03;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.lede {
+  max-width: 59ch;
+  margin: var(--space-lg) 0 0;
+  color: var(--color-paper-soft);
+  font-size: var(--text-md);
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.cta {
+  display: inline-flex;
+  min-height: 44px;
+  margin-top: var(--space-lg);
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-lacquer);
+  border-radius: var(--radius-md);
+  background: var(--color-lacquer);
+  color: var(--color-accent-ink);
+  font-weight: 800;
+  padding: var(--space-xs) var(--space-lg);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    border-color var(--dur-short) var(--ease-out),
+    transform var(--dur-micro) var(--ease-out);
+}
+
+.collaboration {
+  align-self: end;
+  max-width: 37rem;
+  margin: var(--space-xl) 0 0;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-gold-soft);
+  color: var(--color-paper-soft);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.collaboration span {
+  display: block;
+  margin-bottom: var(--space-2xs);
+  color: var(--color-gold-soft);
+  font-weight: 800;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cta:hover {
+    background: var(--color-lacquer-deep);
+    border-color: var(--color-lacquer-deep);
+    transform: translateY(-1px);
+  }
+}
+
+.cta:active {
+  transform: translateY(1px);
+}
+
+.cta[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+@media (min-width: 62rem) {
+  .inner {
+    grid-template-columns: minmax(32rem, 1.25fr) minmax(19rem, 0.75fr);
+    gap: clamp(var(--space-xl), 7vw, var(--space-3xl));
+    align-items: end;
+  }
+
+  .collaboration {
+    margin: 0;
+    padding: 0 0 0 var(--space-lg);
+    border-top: 0;
+    border-left: 1px solid var(--color-gold-soft);
+  }
+}
+
+@media (max-width: 47.999rem) {
+  .hero {
+    min-height: calc(100svh - var(--header-height-compact) - var(--space-xl));
+  }
+
+  .backgroundImage {
+    object-position: 56% center;
+  }
+
+  .inner {
+    padding-block: clamp(var(--space-lg), 6svh, var(--space-xl))
+      clamp(var(--space-xl), 8svh, var(--space-2xl));
+  }
+
+  .copy h1 {
+    font-size: clamp(2.65rem, 14vw, 4rem);
+  }
+
+  .lede {
+    margin-top: var(--space-md);
+    font-size: var(--text-base);
+    line-height: 1.55;
+  }
+
+  .cta {
+    margin-top: var(--space-md);
+  }
+
+  .collaboration {
+    margin-top: var(--space-lg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta {
+    transition: none;
+  }
+
+  .cta:hover,
+  .cta:active {
+    transform: none;
+  }
+}

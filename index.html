@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Công trình số hóa thông tin di tích kiến trúc nghệ thuật Đình Phú Xuân</title>
+
+  <!-- Responsive mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1,user-scalable=no">
+
+  <!-- Leaflet -->
+  <link rel="preload" as="image" href="optimized/map.jpg" fetchpriority="high">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <style>
+    body {
+      margin: 0;
+
+
+      padding: 0;
+      height: 100%;
+    }
+
+    #map {
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #detailModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .modal-content {
+      background: white;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow: auto;
+      border-radius: 15px;
+      padding: 15px;
+      position: relative;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .tabs button {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      background: #eee;
+      border-radius: 8px;
+    }
+
+    .tab-content img {
+      width: 100%;
+      margin: 5px 0;
+      border-radius: 10px;
+    }
+
+    .tabs button {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      background: #eee;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .header {
+      position: fixed;
+      top: 0px;
+      left: 0;
+      width: 100%;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      padding: 10px 14px;
+      /*background:rgba(255,255,255,.92);*/
+      backdrop-filter: blur(8px);
+      /*box-shadow:0 2px 10px rgba(0,0,0,.12);*/
+      z-index: 9999;
+    }
+
+    .logo {
+      position: static;
+      left: 10px;
+      top: 0;
+      pointer-events: auto;
+    }
+
+    .logo img {
+      height: clamp(32px, 5vw, 70px);
+      width: auto;
+      display: block;
+    }
+
+    .title {
+      position: static;
+      transform: none;
+      margin: 0 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      /*background: rgba(255, 255, 255, 0.9);*/
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: clamp(16px, 2.5vw, 40px);
+      color: #8B0000;
+      text-align: center;
+      font-weight: bold;
+      font-family: sans-serif;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (max-width: 767px) {
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 58px;
+
+        display: grid;
+        grid-template-columns: 90px 1fr 58px;
+        padding: 0 12px;
+        column-gap: 10px;
+      }
+
+      .title {
+        position: static;
+        transform: none;
+        font-size: 15px;
+        max-width: 240px;
+        justify-self: center;
+        display: inline-block;
+        padding: 3px 6px;
+        margin: 0;
+        font-size: 12px;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, .12);
+      }
+
+      .logo {
+        position: static;
+      }
+
+      .logo img {
+        height: auto;
+        max-width: 75px;
+        display: block;
+      }
+
+      .menu-container {
+        position: static;
+        justify-self: end;
+        margin-right: 10px;
+      }
+
+      .hamburger-btn {
+        margin-right: 8px;
+      }
+
+      #map {
+        top: 58px;
+        height: calc(100dvh - 58px);
+      }
+    }
+
+    @media(min-width:768px) and (max-width:1024px) {
+
+      .header {
+        display: grid;
+        grid-template-columns: 170px 1fr 70px;
+
+        padding: 10px 16px;
+        column-gap: 16px;
+
+        height: 78px;
+      }
+
+      .logo {
+        position: static;
+      }
+
+      .logo img {
+        max-width: 155px;
+        height: auto;
+      }
+
+      .title {
+        position: static;
+        transform: none;
+        max-width: none;
+        width: auto;
+        margin: 0;
+        padding: 10px 18px;
+        font-size: 26px;
+        line-height: 1.2;
+        text-align: center;
+      }
+
+      .menu-container {
+        position: static;
+        justify-self: end;
+        margin-right: 8px;
+      }
+
+      .hamburger-btn {
+        margin-right: 15px;
+      }
+    }
+
+    @media (min-width:1025px) {
+      .header {
+        position: fixed;
+        top: 0px;
+        left: 0;
+        width: 100%;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        padding: 10px 14px;
+        /*background:rgba(255,255,255,.92);*/
+        backdrop-filter: blur(8px);
+        /*box-shadow:0 2px 10px rgba(0,0,0,.12);*/
+        z-index: 9999;
+      }
+
+      .logo {
+        position: static;
+        left: 10px;
+        top: 0;
+        pointer-events: auto;
+      }
+
+      .logo img {
+        height: clamp(32px, 5vw, 70px);
+        width: auto;
+        display: block;
+      }
+
+      .title {
+        position: relative;
+        width: fit-content;
+        transform: none;
+        padding: 10px 18px;
+        line-height: 1.2;
+        transform: none;
+        margin: 0 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        /*background: rgba(255, 255, 255, 0.9);*/
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: clamp(16px, 2.5vw, 40px);
+        color: #8B0000;
+        text-align: center;
+        font-weight: bold;
+        font-family: sans-serif;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .hamburger-btn {
+        margin-right: 15px;
+      }
+    }
+
+    /* Tab đang chọn */
+    .tabs button.active {
+      background: #4CAF50;
+      /* màu xanh */
+      color: white;
+      font-weight: bold;
+    }
+
+    /* Container giữ vị trí góc phải */
+    .menu-container {
+      position: static;
+      justify-self: end;
+      top: 15px;
+      right: 15px;
+      /* Đặt sát mép phải */
+      z-index: 1000;
+    }
+
+    .hamburger-btn {
+      background-color: #222;
+      /* Màu nền xám đen */
+      width: 44px;
+      height: 44px;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      /* Khoảng cách giữa 3 gạch */
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+      transition: background 0.2s;
+    }
+
+    .hamburger-btn:hover {
+      background-color: #444;
+      /* Sáng lên một chút khi di chuột vào */
+    }
+
+    /* Vẽ 3 vạch ngang bo tròn đầu */
+    .hamburger-btn .bar {
+      width: 22px;
+      height: 3px;
+      background-color: #ddd;
+      /* Màu xám sáng */
+      border-radius: 3px;
+    }
+
+    /* Khung menu thả xuống */
+    .dropdown-content {
+      display: none;
+      /* Mặc định ẩn */
+      position: absolute;
+      top: 55px;
+      /* Nằm ngay dưới nút hamburger */
+      right: 0;
+      background-color: white;
+      min-width: 220px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+
+    /* Class dùng để hiển thị menu khi click bằng JS */
+    .dropdown-content.show {
+      display: block;
+    }
+
+    /* Style cho các mục chọn trong menu */
+    .dropdown-content a {
+      color: #333;
+      padding: 14px 16px;
+      text-decoration: none;
+      display: block;
+      font-size: 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f8f8f8;
+      color: #8b0000;
+      /* Đổi màu chữ khi lướt qua */
+      font-weight: bold;
+    }
+
+    .dropdown-content a:last-child {
+      border-bottom: none;
+    }
+
+    /* Nền tối mờ phủ kín toàn màn hình */
+    #topMenuModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      /* Màu đen mờ */
+      z-index: 9999;
+      /* Đảm bảo nổi lên trên cùng */
+
+      /* 2 dòng này giúp nội dung luôn nằm chính giữa màn hình */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Khung trắng chứa nội dung ở giữa */
+    .menu-modal-content {
+      background-color: white;
+      width: 90%;
+      max-width: 600px;
+      /* Độ rộng của bảng */
+      max-height: 80vh;
+      /* Chiều cao tối đa bằng 80% màn hình */
+      padding: 25px;
+      border-radius: 12px;
+      /* Bo góc */
+      position: relative;
+      overflow-y: auto;
+      /* Tự động có thanh cuộn nếu nội dung dài */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      font-family: sans-serif;
+    }
+
+    /* Nút X đóng bảng ở góc phải trên */
+    .close-menu-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #555;
+      cursor: pointer;
+    }
+
+    .close-menu-btn:hover {
+      color: red;
+    }
+
+    /* Style cho dòng Bản quyền (Copyright) ở cuối trang */
+    .custom-footer {
+      position: fixed;
+      width: auto;
+      bottom: 15px;
+      /* Cách mép dưới 15px */
+      left: 50%;
+      transform: translateX(-50%);
+      /* Căn giữa chính xác */
+      background: rgba(255, 255, 255, 0.85);
+      /* Nền trắng hơi trong suốt */
+      padding: 6px 20px;
+      border-radius: 20px;
+      font-family: sans-serif;
+      font-size: 11px;
+      color: #333;
+      z-index: 1000;
+      /* Nổi lên trên bản đồ */
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      pointer-events: none;
+      /* Cho phép click xuyên qua nếu lỡ bấm trúng bản đồ phía dưới chữ */
+      text-align: center;
+      white-space: nowrap;
+      /* Giữ chữ trên 1 dòng */
+    }
+
+    .leaflet-bottom.leaflet-left {
+      bottom: 80px !important;
+      left: 5px;
+    }
+
+    .modal-content,
+    .info-content,
+    .popup-body {
+      max-height: 75vh;
+      overflow-y: auto;
+
+      -webkit-overflow-scrolling: touch;
+
+      touch-action: pan-y;
+      overscroll-behavior: contain;
+    }
+
+    #detailModal {
+      padding: 18px;
+      box-sizing: border-box;
+      background: rgba(12, 8, 5, 0.72);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+      width: min(92vw, 760px);
+      max-height: min(86vh, 760px);
+      padding: 0;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #fffaf2;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(139, 0, 0, 0.14);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 42px;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 16px 12px 20px;
+      background: linear-gradient(180deg, #fffaf2 0%, #fff3df 100%);
+      border-bottom: 1px solid rgba(139, 0, 0, 0.12);
+    }
+
+    #modalTitle {
+      margin: 0;
+      color: #8b0000;
+      font-family: sans-serif;
+      font-size: clamp(20px, 4vw, 28px);
+      line-height: 1.2;
+    }
+
+    .close-btn {
+      position: static;
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 999px;
+      background: #8b0000;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(139, 0, 0, 0.25);
+    }
+
+    .close-btn:hover {
+      background: #650000;
+    }
+
+    .modal-body {
+      flex: 1;
+      min-height: 0;
+      padding: 0 20px 22px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tabs {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      margin: 0 -20px 18px;
+      padding: 12px 20px;
+      background: #fff3df;
+      border-bottom: 1px solid rgba(139, 0, 0, 0.1);
+      box-shadow: 0 6px 16px rgba(88, 45, 18, 0.08);
+    }
+
+    .tabs button {
+      min-height: 40px;
+      border-radius: 999px;
+      background: #f2e6d4;
+      color: #5b321a;
+      font-weight: 700;
+    }
+
+    .tabs button.active {
+      background: #8b0000;
+      color: #fff;
+    }
+
+    .tab-content {
+      color: #2f251f;
+      font-family: sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .tab-content img {
+      display: block;
+      width: 100%;
+      max-height: 68vh;
+      object-fit: contain;
+      margin: 12px 0;
+      border-radius: 12px;
+      background: #f5ead8;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+      cursor: zoom-in;
+    }
+
+    @media (max-width: 767px) {
+      .viewer-prev,
+      .viewer-next {
+        display: none !important;
+      }
+
+      .image-viewer {
+        padding: 54px 14px !important;
+      }
+
+      #detailModal {
+        padding: 10px;
+        align-items: flex-end;
+      }
+
+      .modal-content {
+        width: 100%;
+        max-height: 88dvh;
+        border-radius: 14px 14px 0 0;
+      }
+
+      .modal-header {
+        padding: 14px 12px 10px 16px;
+      }
+
+      .modal-body {
+        padding: 0 14px 18px;
+      }
+
+      .tabs {
+        margin: 0 -14px 14px;
+        padding: 10px 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <!-- Logo -->
+    <div class="logo">
+      <img src="optimized/logo.png" alt="logo" width="600" height="149" decoding="async" fetchpriority="high">
+    </div>
+    <!-- Tiêu đề -->
+    <div class="title">
+      Công trình số hóa thông tin di tích<br>kiến trúc nghệ thuật Đình Phú Xuân
+    </div>
+    <div class="menu-container">
+      <div class="hamburger-btn" onclick="toggleDropdown()">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+
+      <div id="dropdownMenu" class="dropdown-content">
+        <a href="#" onclick="openTopMenu('info'); toggleDropdown()">Thông Tin Đình Thần</a>
+        <a href="#" onclick="openTopMenu('temple_images'); toggleDropdown()">Hình Ảnh Đình Thần</a>
+        <a href="#" onclick="openTopMenu('activities'); toggleDropdown()">Hình Ảnh Hoạt Động</a>
+      </div>
+    </div>
+  </div>
+  <div id="map"></div>
+
+  <div id="topMenuModal" style="display:none;">
+    <div class="menu-modal-content">
+      <span class="close-menu-btn" onclick="closeTopMenu()">×</span>
+      <h2 id="menuModalTitle" style="margin-top: 0;">Tiêu đề</h2>
+      <div id="menuModalBody">
+      </div>
+    </div>
+  </div>
+  <div class="custom-footer">
+    &copy; 2026 Công trình số hóa thông tin di tích kiến trúc nghệ thuật Đình Phú Xuân.<br>Thiết kế và phát triển bởi Khoa Công
+    nghệ Thông tin <br>Trường Đại học Mở TP.HCM
+  </div>
+  <div id="detailModal" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle"></h2>
+        <button class="close-btn" type="button" onclick="closeModal()" aria-label="Đóng">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="tabs">
+          <button id="btn-info" type="button" onclick="showTab('info')">Thông tin</button>
+          <button id="btn-images" type="button" onclick="showTab('images')">Hình ảnh</button>
+        </div>
+
+        <div id="tab-info" class="tab-content"></div>
+        <div id="tab-images" class="tab-content" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
