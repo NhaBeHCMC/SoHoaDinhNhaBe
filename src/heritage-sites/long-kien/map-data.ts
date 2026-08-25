@@ -95,7 +95,7 @@ const locations: MapLocation[] = [
     legacyPosition: { x: 1644000, y: 1904000 },
     position: imagePosition(555, 285),
     description:
-      "Bài vị đặt trên bàn thờ Tiền Hiền. Đây là nơi tưởng niệm những bậc tiền nhân có công với làng, với đất và với cộng đồng. Hậu Hiền là những người có công khai cơ, xây dựng và phát triển cộng đồng về sau.",
+      "Bài vị đặt trên bàn thờ Hậu Hiền. Đây là nơi tưởng niệm những bậc tiền nhân có công với làng, với đất và với cộng đồng. Hậu Hiền là những người có công khai cơ, xây dựng và phát triển cộng đồng về sau.",
     chineseText: ["後 賢"],
     transliteration: ["Hậu Hiền"],
     images: [image("AnhCacBanTho/HAUHIEN.JPG", "Bài vị Hậu Hiền", "Hậu Hiền")]

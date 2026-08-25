@@ -59,7 +59,13 @@ export function HeritageLocator({ sites }: HeritageLocatorProps) {
           offset: [0, -25],
           className: styles.markerLabel,
         });
-        marker.on("click", () => setActiveSiteId(site.id));
+        marker.on("click", () => {
+          window.open(
+            site.geographicLocation.directionsUrl,
+            "_blank",
+            "noopener,noreferrer",
+          );
+        });
         marker.addTo(map);
         markers.set(site.id, marker);
         bounds.extend([latitude, longitude]);
