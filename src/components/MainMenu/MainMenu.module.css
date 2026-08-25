@@ -1,25 +1,24 @@
-.menu {
-  position: relative;
-  display: inline-flex;
-  justify-content: flex-end;
-}
+/* Hallmark · component: mobile navigation · genre: editorial · theme: custom heritage
+ * states: default · hover · focus · active · disabled · loading · error · success
+ * pre-emit critique: P5 H5 E5 S5 R5 V4 · contrast: pass
+ */
+.menu { position: relative; display: inline-flex; justify-content: flex-end; }
 
 .toggle {
   display: inline-flex;
-  width: 44px;
-  height: 44px;
-  align-items: center;
-  justify-content: center;
+  width: 48px;
+  height: 48px;
   flex-direction: column;
   gap: var(--space-2xs);
+  align-items: center;
+  justify-content: center;
   border: var(--rule-strong);
   border-radius: var(--radius-md);
   background: var(--color-dark-wood);
   color: var(--color-accent-ink);
+  box-shadow: var(--shadow-whisper);
   cursor: pointer;
-  transition:
-    background-color var(--dur-short) var(--ease-out),
-    transform var(--dur-micro) var(--ease-out);
+  transition: background-color var(--dur-short) var(--ease-out), transform var(--dur-micro) var(--ease-out);
 }
 
 .toggle span {
@@ -27,39 +26,33 @@
   height: 2px;
   border-radius: var(--radius-pill);
   background: currentColor;
+  transition: transform var(--dur-short) var(--ease-out), opacity var(--dur-micro) var(--ease-out);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .toggle:hover {
-    background: var(--color-lacquer-deep);
-    transform: translateY(-1px);
-  }
-}
-
-.toggle:active {
-  transform: translateY(1px);
-}
+.toggle[data-open="true"] span:first-child { transform: translateY(calc(var(--space-2xs) + 2px)) rotate(45deg); }
+.toggle[data-open="true"] span:nth-child(2) { opacity: 0; }
+.toggle[data-open="true"] span:last-child { transform: translateY(calc((var(--space-2xs) + 2px) * -1)) rotate(-45deg); }
+.toggle:active { transform: translateY(1px); }
 
 .panel {
   position: absolute;
-  inset-block-start: calc(100% + var(--space-xs));
+  inset-block-start: calc(100% + var(--space-sm));
   inset-inline-end: 0;
   z-index: var(--z-dropdown);
-  min-width: 13rem;
+  width: min(19rem, calc(100vw - 3 * var(--space-md)));
+  padding: var(--space-sm);
   border: var(--rule-hairline);
+  border-block-start: 3px solid var(--color-lacquer);
   border-radius: var(--radius-md);
   background: var(--color-paper-soft);
   box-shadow: var(--shadow-panel);
-  padding: var(--space-xs);
 }
 
-.panel[data-open="true"] {
-  animation: menuIn var(--dur-short) var(--ease-out);
-}
+.panel[data-open="true"] { animation: menuIn var(--dur-short) var(--ease-out); }
 
 .panel a {
   display: flex;
-  min-height: 44px;
+  min-height: 48px;
   align-items: center;
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-sm);
@@ -67,25 +60,36 @@
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
-  transition:
-    background-color var(--dur-short) var(--ease-out),
-    color var(--dur-short) var(--ease-out);
+  transition: background-color var(--dur-short) var(--ease-out), color var(--dur-short) var(--ease-out), transform var(--dur-micro) var(--ease-out);
 }
+
+.homeLink { font-family: var(--font-heading); font-size: var(--text-md); }
+
+.groupLabel {
+  margin: var(--space-sm) var(--space-sm) var(--space-2xs);
+  padding-block-start: var(--space-sm);
+  border-block-start: var(--rule-hairline);
+  color: var(--color-lacquer);
+  font-size: var(--text-sm);
+  font-weight: 800;
+}
+
+.heritageList { display: grid; gap: var(--space-2xs); padding-inline-start: var(--space-sm); }
+.heritageList a::before { content: "—"; margin-inline-end: var(--space-xs); color: var(--color-rule-strong); }
 
 @media (hover: hover) and (pointer: fine) {
-  .panel a:hover {
-    background: var(--color-parchment);
-    color: var(--color-lacquer);
-  }
+  .toggle:hover { background: var(--color-lacquer-deep); transform: translateY(-1px); }
+  .panel a:hover { background: var(--color-parchment); color: var(--color-lacquer); transform: translateX(2px); }
 }
 
+@media (min-width: 64rem) { .menu { display: none; } }
+
 @keyframes menuIn {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel { animation-duration: 150ms; }
+  .toggle span { transition-duration: 150ms; }
 }

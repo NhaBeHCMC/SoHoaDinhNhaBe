@@ -20,27 +20,19 @@ export function MapCollection({ maps }: MapCollectionProps) {
 
       <div className={styles.grid}>
         {maps.map((map) => (
-          <article className={styles.card} key={map.id} data-status={map.status}>
-            {map.image ? (
-              <Image
-                src={map.image}
-                alt=""
-                loading="lazy"
-                width={1200}
-                height={800}
-                unoptimized
-              />
-            ) : (
-              <div className={styles.imagePlaceholder} aria-hidden="true" />
-            )}
+          <article className={styles.card} key={map.id}>
+            <Image
+              src={map.image}
+              alt=""
+              loading="lazy"
+              width={1200}
+              height={800}
+              unoptimized
+            />
             <div className={styles.cardBody}>
               <h3>{map.shortTitle ?? map.title}</h3>
               <p>{map.description}</p>
-              {map.status === "available" ? (
-                <Link href={`/ban-do/${map.slug}`}>Mở bản đồ</Link>
-              ) : (
-                <span aria-disabled="true">Đang chuẩn bị</span>
-              )}
+              <Link href={`/ban-do/${map.slug}`}>Mở bản đồ</Link>
             </div>
           </article>
         ))}

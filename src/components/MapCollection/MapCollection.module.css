@@ -42,22 +42,13 @@
   background: var(--color-paper-soft);
 }
 
-.card[data-status="planned"] {
-  background: var(--color-parchment);
-}
-
-.card img,
-.imagePlaceholder {
+.card img {
   display: block;
   aspect-ratio: 3 / 2;
   width: 100%;
   height: auto;
   object-fit: cover;
   border-block-end: var(--rule-hairline);
-}
-
-.imagePlaceholder {
-  background: var(--color-parchment-deep);
 }
 
 .cardBody {

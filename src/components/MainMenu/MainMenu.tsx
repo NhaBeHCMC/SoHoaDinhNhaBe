@@ -4,13 +4,17 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import styles from "./MainMenu.module.css";
 
-const menuItems = [
-  { href: "/", label: "Trang chủ" },
-  { href: "/#bo-ban-do", label: "Bộ bản đồ" },
-  { href: "/ban-do/dinh-phu-xuan", label: "Đình Phú Xuân" }
-];
+export interface MainMenuItem {
+  href: string;
+  label: string;
+}
 
-export function MainMenu() {
+interface MainMenuProps {
+  homeItem: MainMenuItem;
+  heritageItems: MainMenuItem[];
+}
+
+export function MainMenu({ homeItem, heritageItems }: MainMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -37,13 +41,14 @@ export function MainMenu() {
   }, []);
 
   return (
-    <div className={styles.menu} ref={menuRef}>
+    <div className={styles.menu} ref={menuRef} data-open={isOpen}>
       <button
         type="button"
         className={styles.toggle}
         aria-label={isOpen ? "Đóng menu chính" : "Mở menu chính"}
         aria-expanded={isOpen}
         aria-controls="main-menu-panel"
+        data-open={isOpen}
         onClick={() => setIsOpen((value) => !value)}
       >
         <span />
@@ -57,11 +62,15 @@ export function MainMenu() {
         data-open={isOpen}
         hidden={!isOpen}
       >
-        {menuItems.map((item) => (
-          <Link key={item.href} href={item.href} onClick={() => setIsOpen(false)}>
-            {item.label}
-          </Link>
-        ))}
+        <Link className={styles.homeLink} href={homeItem.href} onClick={() => setIsOpen(false)}>{homeItem.label}</Link>
+        <p className={styles.groupLabel}>Danh sách các Đình</p>
+        <div className={styles.heritageList}>
+          {heritageItems.map((item) => (
+            <Link key={item.href} href={item.href} onClick={() => setIsOpen(false)}>
+              {item.label}
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );

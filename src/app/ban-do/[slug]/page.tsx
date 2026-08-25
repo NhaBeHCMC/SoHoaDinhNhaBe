@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { MapViewer } from "@/components/MapViewer/MapViewer";
 import { SiteHeader } from "@/components/SiteHeader/SiteHeader";
 import { getMapBySlug, maps } from "@/data/maps";
-import { buildMediaUrl } from "@/lib/image-url";
+import { buildMapMediaUrl } from "@/lib/image-url";
 import { getSiteUrl } from "@/lib/seo";
 import styles from "./page.module.css";
 
@@ -44,12 +44,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title,
       description: mapData.description,
       url: `${siteUrl}${path}`,
-      siteName: "Bản đồ số di tích Đình Phú Xuân",
+      siteName: "Hệ thống bản đồ số hóa thông tin di tích các Đình trên địa bàn xã Nhà Bè",
       locale: "vi_VN",
       type: "website",
       images: [
         {
-          url: buildMediaUrl(mapData.mapImage),
+          url: buildMapMediaUrl(mapData.mapImage, mapData.media),
           width: mapData.intrinsicMapWidth ?? mapData.mapWidth,
           height: mapData.intrinsicMapHeight ?? mapData.mapHeight,
           alt: `Sơ đồ ${mapData.shortTitle ?? mapData.title}`
@@ -74,7 +74,7 @@ export default async function MapPage({ params }: PageProps) {
         <div className={styles.titleBar}>
           <Link href="/#bo-ban-do">Quay về danh sách bản đồ</Link>
           <h1>{mapData.shortTitle ?? mapData.title}</h1>
-          <p>{mapData.locations.length} marker hiện vật và không gian thờ tự.</p>
+          <p>{mapData.locations.length} điểm hiện vật và không gian thờ tự.</p>
         </div>
         <MapViewer mapData={mapData} />
       </main>

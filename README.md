@@ -1,6 +1,6 @@
-# Công trình số hóa thông tin di tích kiến trúc nghệ thuật Đình Phú Xuân
+# Hệ thống số hóa thông tin di tích các đình xã Nhà Bè
 
-Dự án tái cấu trúc website bản đồ số Đình Phú Xuân từ HTML/CSS/JavaScript thuần sang Next.js App Router, TypeScript và Leaflet. Mục tiêu là giữ nguyên dữ liệu lịch sử, ảnh và vị trí marker hiện có, đồng thời tạo nền tảng có thể tái sử dụng để xây dựng tổng cộng 9 bản đồ số di tích.
+Dự án tích hợp bản đồ số Đình Phú Xuân và Đình Long Kiển trong một khung Next.js App Router, TypeScript và Leaflet dùng chung. Mục tiêu là giữ nguyên dữ liệu lịch sử, ảnh và vị trí marker của từng đình, đồng thời tạo nền tảng có thể mở rộng cho các di tích tiếp theo.
 
 ## Công nghệ
 
@@ -13,12 +13,13 @@ Dự án tái cấu trúc website bản đồ số Đình Phú Xuân từ HTML/C
 
 - `src/app`: route trang chủ, route `/ban-do/[slug]`, metadata, sitemap, robots.
 - `src/components`: header, menu, bộ sưu tập bản đồ, Leaflet viewer, detail panel, gallery.
-- `src/data`: dữ liệu bản đồ và dữ liệu Đình Phú Xuân đã tách khỏi giao diện.
+- `src/heritage-sites/phu-xuan`: dữ liệu và cấu hình media riêng của Đình Phú Xuân.
+- `src/heritage-sites/long-kien`: dữ liệu và cấu hình media riêng của Đình Long Kiển.
+- `src/data/maps.ts`: registry chung, nơi đăng ký các đình vào hệ thống.
 - `src/lib`: chuyển tọa độ, adapter ảnh, SEO helper, sanitize helper cho dữ liệu legacy.
 - `src/types`: type dùng chung cho bản đồ.
 - `src/test`: test dữ liệu và công thức chuyển đổi.
 - `public/logo.png`: logo liên đơn vị được phục vụ trực tiếp từ ứng dụng.
-- `index.html`, `script.js`: phiên bản cũ được giữ để đối chiếu cấu trúc và dữ liệu.
 
 ## Chạy local
 
@@ -40,8 +41,8 @@ npm run build
 
 ## Thêm bản đồ mới
 
-1. Upload ảnh sơ đồ lên Cloudinary bằng cùng quy ước public ID trong phần Quản lý ảnh.
-2. Tạo một `MapData` mới theo type trong `src/types/map.ts`.
+1. Tạo folder mới trong `src/heritage-sites/<ten-dinh>` và khai báo một `MapData` theo type trong `src/types/map.ts`.
+2. Chọn media `local` để dùng ảnh trong `public`, hoặc `cloudinary` khi ảnh đã được upload.
 3. Thêm `MapData` đó vào mảng `maps` trong `src/data/maps.ts`.
 4. Không cần copy `MapViewer` hoặc tạo route riêng; `/ban-do/[slug]` dùng chung cho mọi bản đồ.
 
@@ -79,7 +80,7 @@ Test trong `src/test/map-data.test.ts` khóa công thức này để marker khô
 
 ## Bản đồ địa lý trang chủ
 
-Trang chủ dùng Leaflet và nền OpenStreetMap để hiển thị vị trí ngoài đời của các di tích mà không cần Google Maps API key. Đình Phú Xuân hiện được đặt tại tọa độ `10.69838, 106.73501`, đối chiếu theo OpenStreetMap way `614636407`.
+Trang chủ dùng Leaflet và nền OpenStreetMap để hiển thị vị trí các di tích; nút chỉ đường mở Google Maps.
 
 Mỗi `MapData` có thể khai báo thêm:
 
@@ -88,17 +89,20 @@ geographicLocation: {
   latitude: 10.69838,
   longitude: 106.73501,
   address: "Đường Huỳnh Tấn Phát, xã Nhà Bè, TP.HCM",
-  sourceUrl: "https://www.openstreetmap.org/way/614636407",
   directionsUrl: "https://www.google.com/maps/dir/?api=1&destination=10.69838%2C106.73501"
 }
 ```
 
-`getGeolocatedMapSummaries()` chỉ đưa các bản đồ có tọa độ thật lên bản đồ trang chủ. Khi bổ sung một đình mới, thêm dữ liệu `MapData` và `geographicLocation`; marker, danh sách địa điểm và khung nhìn sẽ được cập nhật tự động.
+`getGeolocatedMapSummaries()` chỉ đưa các bản đồ có tọa độ thật lên bản đồ trang chủ. Khi bổ sung một đình mới, thêm dữ liệu `MapData` và `geographicLocation` để marker, địa chỉ và nút chỉ đường được cập nhật tự động.
 
 ## Quản lý ảnh bằng Cloudinary
 
-Ứng dụng chỉ tạo URL từ Cloudinary, không còn fallback về `public/legacy-assets`. Một ảnh gốc
-được dùng cho cả ba ngữ cảnh thông qua transformation của Cloudinary:
+Ảnh hai đình được phân phối từ hai folder Cloudinary độc lập:
+
+- Phú Xuân: `nha-be/di-tich-phu-xuan`.
+- Long Kiển: `nha-be/di-tich-long-kien`.
+
+Một ảnh gốc được dùng cho cả ba ngữ cảnh thông qua transformation của Cloudinary:
 
 - `thumbs`: crop `480x320` cho lưới gallery.
 - `large`: giới hạn chiều rộng `1600px` cho card và hero.
@@ -109,7 +113,8 @@ geographicLocation: {
 ba bản sao `thumbs/large/viewer` trong `public` vì Cloudinary tạo kích thước phù hợp bằng
 transformation.
 
-Các bản ảnh Đình Phú Xuân local được loại khỏi source sau khi xác nhận đã có trên Cloudinary.
+Các bản ảnh đình local được loại khỏi source sau khi xác nhận đã có trên Cloudinary. Khi cần
+thay ảnh, truyền thư mục nguồn bên ngoài repository cho script upload.
 
 1. Sao chép `.env.example` thành `.env.local`.
 2. Điền Cloud name, API key và API secret lấy từ Cloudinary Console.
@@ -125,14 +130,21 @@ npm run cloudinary:upload -- --dry-run
 npm run cloudinary:upload
 ```
 
+Upload ảnh Long Kiển từ một thư mục nguồn vào đúng folder:
+
+```bash
+npm run cloudinary:upload -- --source "C:/duong-dan/anh-long-kien" --folder nha-be/di-tich-long-kien --tags nha-be,di-tich-long-kien
+```
+
 5. Khi cần thay thế ảnh có cùng public ID:
 
 ```bash
 npm run cloudinary:upload -- --overwrite
 ```
 
-Script migration không đưa `logo.png` lên Cloudinary. Public ID ảnh đình được giữ ổn định theo cấu trúc, ví dụ
-`nha-be/di-tich-phu-xuan/AnhDinh/dinh (1)`. API secret chỉ được script đọc ở server và
+Script upload không đưa `logo.png` lên Cloudinary. Public ID ảnh đình được giữ ổn định
+theo cấu trúc, ví dụ `nha-be/di-tich-phu-xuan/AnhDinh/dinh (1)` hoặc
+`nha-be/di-tich-long-kien/AnhDinh/dinh (1)`. API secret chỉ được script đọc ở server và
 không mang tiền tố `NEXT_PUBLIC_`.
 
 ## Deploy Vercel
@@ -163,16 +175,15 @@ Khi chỉnh sửa giao diện tiếp theo, hãy rà lại:
 - Kiểm tra mobile ở 360x800, 390x844, 768x1024.
 - Đảm bảo focus-visible, vùng nhấn tối thiểu 44px, không khóa zoom.
 
-## Những phần chưa thực hiện
+## Lưu ý vận hành
 
-- Chưa có 8 bản đồ còn lại; trang chủ đang giữ chỗ cho các bản đồ này.
-- Chưa cấu hình domain production vì chưa được yêu cầu.
-- Nếu phát hiện lỗi chính tả hoặc sai dữ liệu trong nội dung gốc, cần xác minh nguồn trước khi sửa. Một số câu trong `script.js` có vẻ có lỗi gõ nhưng hiện được giữ nguyên theo yêu cầu bảo toàn nội dung.
+- Đã có 2 bản đồ là Đình Phú Xuân và Đình Long Kiển.
+- Cần cấu hình domain production qua `NEXT_PUBLIC_SITE_URL` trước khi phát hành chính thức.
+- Nếu phát hiện lỗi chính tả hoặc sai dữ liệu trong nội dung gốc, cần xác minh nguồn trước khi sửa.
 - Ảnh sơ đồ trên Cloudinary có kích thước thực 2000x1646, trong khi bản cũ ép bounds 2000x1600. Code mới giữ `mapHeight = 1600` để bảo toàn vị trí marker.
 
-## Đối chiếu phiên bản cũ
+## Kiểm tra dữ liệu
 
 - Số marker cũ: 11.
 - Số marker mới: kiểm bằng `PHU_XUAN_SOURCE_MARKER_COUNT` và test.
-- `index.html` và `script.js` vẫn được giữ để đối chiếu; ảnh đình được lấy từ Cloudinary.
-- Dữ liệu lịch sử, tên địa điểm, danh sách ảnh và vị trí marker đã được chuyển sang `src/data/phu-xuan.ts`.
+- Dữ liệu từng đình nằm trong `src/heritage-sites/<ten-dinh>/map-data.ts`; `src/data/phu-xuan.ts` chỉ là file tương thích cho đường dẫn cũ.

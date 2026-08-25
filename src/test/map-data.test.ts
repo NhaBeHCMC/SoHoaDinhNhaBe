@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { getGeolocatedMapSummaries, maps } from "../data/maps";
+import { getAllMapSummaries, getGeolocatedMapSummaries, maps } from "../data/maps";
 import { PHU_XUAN_SOURCE_MARKER_COUNT, phuXuanMap } from "../data/phu-xuan";
+import {
+  LONG_KIEN_SOURCE_MARKER_COUNT,
+  longKienMap
+} from "../heritage-sites/long-kien/map-data";
 import {
   LEGACY_IMAGE_HEIGHT,
   LEGACY_IMAGE_WIDTH,
@@ -10,6 +14,7 @@ import {
 import {
   buildCloudinaryPublicId,
   buildLargeUrl,
+  buildMapMediaUrl,
   buildMediaUrl,
   buildThumbnailUrl,
   buildViewerUrl
@@ -35,6 +40,20 @@ describe("map data", () => {
     expect(phuXuanMap.locations).toHaveLength(PHU_XUAN_SOURCE_MARKER_COUNT);
   });
 
+  it("keeps the original Long Kien marker and gallery counts", () => {
+    expect(longKienMap.locations).toHaveLength(LONG_KIEN_SOURCE_MARKER_COUNT);
+    expect(longKienMap.galleries[0].images).toHaveLength(16);
+    expect(longKienMap.galleries[1].images).toHaveLength(12);
+  });
+
+  it("lists only registered maps", () => {
+    expect(getAllMapSummaries()).toHaveLength(2);
+    expect(maps.map((map) => map.slug)).toEqual([
+      "dinh-phu-xuan",
+      "dinh-long-kien"
+    ]);
+  });
+
   it("keeps all coordinates normalized", () => {
     for (const map of maps) {
       for (const location of map.locations) {
@@ -46,14 +65,18 @@ describe("map data", () => {
     }
   });
 
-  it("publishes verified geographic coordinates for the home map", () => {
-    const [site] = getGeolocatedMapSummaries();
+  it("publishes verified geographic coordinates for both home-map sites", () => {
+    const [phuXuan, longKien] = getGeolocatedMapSummaries();
 
-    expect(site.slug).toBe("dinh-phu-xuan");
-    expect(site.geographicLocation.latitude).toBeCloseTo(10.69838, 5);
-    expect(site.geographicLocation.longitude).toBeCloseTo(106.73501, 5);
-    expect(site.geographicLocation.address).toContain("Nhà Bè");
-    expect(site.geographicLocation.sourceUrl).toContain("openstreetmap.org");
+    expect(phuXuan.slug).toBe("dinh-phu-xuan");
+    expect(phuXuan.geographicLocation.latitude).toBeCloseTo(10.69838, 5);
+    expect(phuXuan.geographicLocation.longitude).toBeCloseTo(106.73501, 5);
+    expect(phuXuan.geographicLocation.address).toContain("Nhà Bè");
+
+    expect(longKien.slug).toBe("dinh-long-kien");
+    expect(longKien.geographicLocation.latitude).toBeCloseTo(10.6973805, 6);
+    expect(longKien.geographicLocation.longitude).toBeCloseTo(106.7060156, 6);
+    expect(longKien.geographicLocation.address).toContain("Lê Văn Lương");
   });
 
   it("keeps required location fields and image paths", () => {
@@ -103,11 +126,26 @@ describe("image adapter", () => {
     );
   });
 
-  it("keeps existing remote URLs unchanged and rejects local paths", () => {
+  it("keeps existing remote and public-local URLs unchanged", () => {
     expect(buildMediaUrl("https://example.test/image.jpg")).toBe("https://example.test/image.jpg");
-    expect(() => buildMediaUrl("/legacy-assets/image.jpg", undefined, cloudinaryOptions)).toThrow(
-      "Ảnh local không còn được hỗ trợ"
+    expect(buildMediaUrl("/heritage-sites/long-kien/map.jpg")).toBe(
+      "/heritage-sites/long-kien/map.jpg"
     );
+  });
+
+  it("resolves every Long Kien image from its own Cloudinary folder", () => {
+    const logicalPaths = [
+      longKienMap.mapImage,
+      ...longKienMap.locations.flatMap((location) => location.images.map((item) => item.src)),
+      ...longKienMap.galleries.flatMap((gallery) => gallery.images.map((item) => item.src))
+    ];
+
+    for (const logicalPath of logicalPaths) {
+      const publicUrl = buildMapMediaUrl(logicalPath, longKienMap.media, "large");
+      expect(publicUrl).toContain(
+        "/v1787658101/nha-be/di-tich-long-kien/"
+      );
+    }
   });
 
   it("uses stable public IDs without file extensions", () => {

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { MainMenu } from "@/components/MainMenu/MainMenu";
+import { maps } from "@/data/maps";
 import styles from "./SiteHeader.module.css";
 
 interface SiteHeaderProps {
@@ -8,12 +9,18 @@ interface SiteHeaderProps {
 }
 
 export function SiteHeader({ compact = false }: SiteHeaderProps) {
+  const homeItem = { href: "/", label: "Trang chủ" };
+  const heritageItems = maps.map((map) => ({
+    href: `/ban-do/${map.slug}`,
+    label: map.shortTitle ?? map.title
+  }));
+
   return (
     <header className={styles.header} data-compact={compact}>
-      <Link className={styles.brand} href="/" aria-label="Về trang chủ bản đồ số Đình Phú Xuân">
+      <Link className={styles.brand} href="/" aria-label="Về trang chủ Hệ thống bản đồ số hóa thông tin di tích các Đình trên địa bàn xã Nhà Bè">
         <Image
           src="/logo.png"
-          alt="Logo Công trình số hóa thông tin di tích kiến trúc nghệ thuật Đình Phú Xuân"
+          alt="Logo hệ thống số hóa thông tin di tích xã Nhà Bè"
           width={600}
           height={149}
           priority
@@ -21,12 +28,18 @@ export function SiteHeader({ compact = false }: SiteHeaderProps) {
       </Link>
 
       <nav className={styles.nav} aria-label="Điều hướng chính">
-        <Link href="/">Trang chủ</Link>
-        <Link href="/#ban-do-nha-be">Bản đồ Nhà Bè</Link>
-        <Link href="/ban-do/dinh-phu-xuan">Đình Phú Xuân</Link>
+        <Link href={homeItem.href}>{homeItem.label}</Link>
+        <div className={styles.dropdown}>
+          <button type="button" aria-haspopup="menu">Danh sách các Đình</button>
+          <div className={styles.dropdownPanel}>
+            {heritageItems.map((item) => (
+              <Link key={item.href} href={item.href}>{item.label}</Link>
+            ))}
+          </div>
+        </div>
       </nav>
 
-      <MainMenu />
+      <MainMenu homeItem={homeItem} heritageItems={heritageItems} />
     </header>
   );
 }

@@ -4,7 +4,8 @@
 }
 
 .titleBar {
-  position: relative;
+  position: sticky;
+  inset-block-start: var(--header-height-compact);
   z-index: var(--z-raised);
   display: grid;
   grid-template-columns: minmax(0, 1fr);

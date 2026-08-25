@@ -8,20 +8,20 @@ const siteUrl = getSiteUrl();
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Bản đồ số di tích Đình Phú Xuân",
-    template: "%s | Bản đồ số di tích Đình Phú Xuân"
+    default: "Hệ thống bản đồ số hóa thông tin di tích các Đình trên địa bàn xã Nhà Bè",
+    template: "%s | Hệ thống bản đồ số hóa thông tin di tích các Đình trên địa bàn xã Nhà Bè"
   },
   description:
-    "Hệ thống bản đồ số hóa thông tin di tích kiến trúc nghệ thuật Đình Phú Xuân và các bản đồ di tích tiếp theo.",
+    "Hệ thống bản đồ số hóa thông tin di tích kiến trúc nghệ thuật các đình trên địa bàn xã Nhà Bè.",
   alternates: {
     canonical: "/"
   },
   openGraph: {
-    title: "Bản đồ số di tích Đình Phú Xuân",
+    title: "Hệ thống bản đồ số hóa thông tin di tích các Đình trên địa bàn xã Nhà Bè",
     description:
       "Nền tảng bản đồ số hóa di tích với dữ liệu hiện vật, vị trí và gallery hình ảnh.",
     url: "/",
-    siteName: "Bản đồ số di tích Đình Phú Xuân",
+    siteName: "Hệ thống bản đồ số hóa thông tin di tích các Đình trên địa bàn xã Nhà Bè",
     locale: "vi_VN",
     type: "website",
     images: [

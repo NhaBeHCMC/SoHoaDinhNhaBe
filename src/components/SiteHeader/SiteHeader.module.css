@@ -1,3 +1,7 @@
+/* Hallmark · component: responsive heritage header · genre: editorial · theme: custom heritage
+ * states: default · hover · focus · active · disabled · loading · error · success
+ * pre-emit critique: P5 H5 E5 S5 R5 V4 · contrast: pass
+ */
 .header {
   position: sticky;
   inset-block-start: 0;
@@ -5,63 +9,128 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: var(--space-md);
+  gap: var(--space-sm);
   min-height: var(--header-height);
-  padding: var(--space-sm) clamp(var(--space-md), 4vw, var(--space-xl));
+  padding: var(--space-xs) clamp(var(--space-md), 4vw, var(--space-xl));
   border-block-end: var(--rule-hairline);
   background: var(--color-paper-soft);
 }
 
 .header[data-compact="true"] {
   min-height: var(--header-height-compact);
-  padding-block: var(--space-xs);
+  padding-block: var(--space-2xs);
 }
 
-.brand {
+.header[data-compact="true"] .brand img {
+  width: min(13rem, 56vw);
+  max-height: calc(var(--header-height-compact) - (var(--space-2xs) * 2));
+  object-fit: contain;
+}
+
+.brand { display: inline-flex; min-width: 0; align-items: center; }
+.brand img { width: min(17rem, 65vw); height: auto; }
+
+.nav { display: none; align-items: center; gap: var(--space-lg); }
+
+.nav > a,
+.dropdown > button {
   display: inline-flex;
-  min-width: 0;
-  align-items: center;
-}
-
-.brand img {
-  width: min(13.5rem, 48vw);
-  height: auto;
-}
-
-.nav {
-  display: none;
-  align-items: center;
-  gap: var(--space-md);
-}
-
-.nav a {
   min-height: 44px;
-  display: inline-flex;
   align-items: center;
   color: var(--color-ink-soft);
   font-size: var(--text-sm);
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
-  transition:
-    color var(--dur-short) var(--ease-out),
-    transform var(--dur-micro) var(--ease-out);
+  transition: color var(--dur-short) var(--ease-out), transform var(--dur-micro) var(--ease-out);
 }
 
+.dropdown { position: relative; display: flex; align-items: center; }
+
+.dropdown > button {
+  gap: var(--space-xs);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.dropdown > button::after {
+  content: "▾";
+  color: var(--color-lacquer);
+  font-size: 0.8em;
+  transition: transform var(--dur-micro) var(--ease-out);
+}
+
+.dropdownPanel {
+  position: absolute;
+  inset-block-start: calc(100% + var(--space-xs));
+  inset-inline-end: 0;
+  z-index: var(--z-dropdown);
+  display: grid;
+  visibility: hidden;
+  min-width: 14rem;
+  padding: var(--space-xs);
+  border: var(--rule-hairline);
+  border-radius: var(--radius-md);
+  background: var(--color-paper-soft);
+  box-shadow: var(--shadow-panel);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: opacity var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out), visibility 0s linear var(--dur-short);
+}
+
+.dropdownPanel a {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  color: var(--color-ink);
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.dropdownPanel::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--space-xs) * -1) 0 auto;
+  height: var(--space-xs);
+}
+
+.dropdown:hover .dropdownPanel,
+.dropdown:focus-within .dropdownPanel {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition-delay: 0s;
+}
+
+.dropdown:hover > button::after,
+.dropdown:focus-within > button::after { transform: rotate(180deg); }
+
+.dropdown > button:active { transform: translateY(1px); }
+
 @media (hover: hover) and (pointer: fine) {
-  .nav a:hover {
-    color: var(--color-lacquer);
-    transform: translateY(-1px);
-  }
+  .nav > a:hover,
+  .dropdown > button:hover,
+  .dropdownPanel a:hover { color: var(--color-lacquer); transform: translateY(-1px); }
 }
 
 @media (min-width: 48rem) {
-  .header {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-  }
+  .header { grid-template-columns: auto minmax(0, 1fr) auto; }
+}
 
-  .nav {
-    display: flex;
-    justify-self: end;
-  }
+@media (min-width: 64rem) {
+  .brand img { width: 20rem; }
+  .nav { display: flex; justify-self: end; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dropdownPanel,
+  .dropdown > button::after { transition-duration: 150ms; }
+  .dropdownPanel { transform: none; }
 }

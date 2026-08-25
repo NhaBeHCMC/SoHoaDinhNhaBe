@@ -18,7 +18,6 @@ export interface GeographicLocation {
   latitude: number;
   longitude: number;
   address: string;
-  sourceUrl: string;
   directionsUrl: string;
 }
 
@@ -46,6 +45,17 @@ export interface MapGallery {
   images: MapImage[];
 }
 
+export type MapMediaConfig =
+  | {
+      provider: "cloudinary";
+      assetFolder?: string;
+      deliveryVersion?: string | number;
+    }
+  | {
+      provider: "local";
+      basePath: string;
+    };
+
 export interface MapLocation {
   id: string;
   title: string;
@@ -72,6 +82,7 @@ export interface MapData {
   shortTitle?: string;
   description: string;
   mapImage: string;
+  media: MapMediaConfig;
   mapWidth: number;
   mapHeight: number;
   intrinsicMapWidth?: number;
@@ -89,8 +100,8 @@ export interface MapSummary {
   title: string;
   shortTitle?: string;
   description: string;
-  image?: string;
-  status: "available" | "planned";
+  image: string;
+  status: "available";
   geographicLocation?: GeographicLocation;
 }
 

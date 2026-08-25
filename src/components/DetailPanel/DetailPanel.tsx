@@ -1,39 +1,44 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import type { MapLocation } from "@/types/map";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { MapLocation, MapMediaConfig } from "@/types/map";
 import { ImageGallery } from "@/components/ImageGallery/ImageGallery";
 import styles from "./DetailPanel.module.css";
 
 interface DetailPanelProps {
   location: MapLocation | null;
+  media: MapMediaConfig;
   open: boolean;
   onClose: () => void;
 }
 
 type DetailTab = "info" | "images";
 
-export function DetailPanel({ location, open, onClose }: DetailPanelProps) {
+export function DetailPanel({ location, media, open, onClose }: DetailPanelProps) {
   const [activeTab, setActiveTab] = useState<DetailTab>("info");
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (open) {
-      setActiveTab("info");
       window.setTimeout(() => closeButtonRef.current?.focus(), 0);
     }
   }, [open, location?.id]);
 
+  const handleClose = useCallback(() => {
+    setActiveTab("info");
+    onClose();
+  }, [onClose]);
+
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape" && open && !document.querySelector("dialog[open]")) {
-        onClose();
+        handleClose();
       }
     }
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onClose, open]);
+  }, [handleClose, open]);
 
   if (!location) {
     return null;
@@ -59,7 +64,7 @@ export function DetailPanel({ location, open, onClose }: DetailPanelProps) {
           type="button"
           ref={closeButtonRef}
           className={styles.close}
-          onClick={onClose}
+          onClick={handleClose}
           aria-label="Đóng thông tin hiện vật"
         >
           ×
@@ -122,7 +127,7 @@ export function DetailPanel({ location, open, onClose }: DetailPanelProps) {
           aria-labelledby="location-tab-images"
           hidden={activeTab !== "images"}
         >
-          <ImageGallery images={location.images} title={location.title} />
+          <ImageGallery images={location.images} title={location.title} media={media} />
         </section>
       </div>
     </aside>

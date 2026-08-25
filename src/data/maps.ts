@@ -1,16 +1,9 @@
-import { buildLargeUrl } from "@/lib/image-url";
+import { longKienMap } from "@/heritage-sites/long-kien/map-data";
+import { phuXuanMap } from "@/heritage-sites/phu-xuan/map-data";
+import { buildMapMediaUrl } from "@/lib/image-url";
 import type { GeolocatedMapSummary, MapData, MapSummary } from "@/types/map";
-import { phuXuanMap } from "./phu-xuan";
 
-export const maps: MapData[] = [phuXuanMap];
-
-export const futureMapSlots: MapSummary[] = Array.from({ length: 8 }, (_, index) => ({
-  id: `future-map-${index + 1}`,
-  slug: `ban-do-tuong-lai-${index + 1}`,
-  title: `Bản đồ di tích tiếp theo ${index + 1}`,
-  description: "Vị trí dành sẵn cho bản đồ số tiếp theo trong hệ thống.",
-  status: "planned"
-}));
+export const maps: MapData[] = [phuXuanMap, longKienMap];
 
 export function getMapBySlug(slug: string): MapData | undefined {
   return maps.find((map) => map.slug === slug);
@@ -23,7 +16,7 @@ export function getMapSummaries(): MapSummary[] {
     title: map.title,
     shortTitle: map.shortTitle,
     description: map.description,
-    image: buildLargeUrl(map.mapImage),
+    image: buildMapMediaUrl(map.mapImage, map.media, "large"),
     status: "available",
     geographicLocation: map.geographicLocation
   }));
@@ -36,5 +29,5 @@ export function getGeolocatedMapSummaries(): GeolocatedMapSummary[] {
 }
 
 export function getAllMapSummaries(): MapSummary[] {
-  return [...getMapSummaries(), ...futureMapSlots];
+  return getMapSummaries();
 }

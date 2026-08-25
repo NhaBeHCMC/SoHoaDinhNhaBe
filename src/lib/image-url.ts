@@ -1,3 +1,5 @@
+import type { MapMediaConfig } from "@/types/map";
+
 export type ImageVariant = "thumbs" | "large" | "viewer";
 
 const CLOUDINARY_DELIVERY_ROOT = "https://res.cloudinary.com";
@@ -13,6 +15,7 @@ const TRANSFORMATIONS: Record<ImageVariant | "default", string> = {
 interface ImageUrlOptions {
   cloudName?: string;
   assetFolder?: string;
+  deliveryVersion?: string | number;
 }
 
 export function buildMediaUrl(
@@ -31,9 +34,7 @@ export function buildMediaUrl(
   }
 
   if (cleanSrc.startsWith("/")) {
-    throw new Error(
-      `Ảnh local không còn được hỗ trợ: ${cleanSrc}. Hãy dùng public ID hoặc URL Cloudinary.`
-    );
+    return cleanSrc;
   }
 
   const cloudName =
@@ -51,6 +52,7 @@ export function buildMediaUrl(
     DEFAULT_ASSET_FOLDER;
   const transformation = TRANSFORMATIONS[variant ?? "default"];
   const publicId = buildCloudinaryPublicId(cleanSrc, assetFolder);
+  const deliveryVersion = normalizeDeliveryVersion(options.deliveryVersion);
 
   return [
     CLOUDINARY_DELIVERY_ROOT,
@@ -58,8 +60,37 @@ export function buildMediaUrl(
     "image",
     "upload",
     transformation,
+    deliveryVersion ? `v${deliveryVersion}` : undefined,
     encodeCloudinaryPath(publicId)
-  ].join("/");
+  ]
+    .filter(Boolean)
+    .join("/");
+}
+
+export function buildMapMediaUrl(
+  src: string,
+  media: MapMediaConfig,
+  variant?: ImageVariant
+): string {
+  const cleanSrc = normalizeSlashes(src).trim();
+
+  if (!cleanSrc || isRemoteUrl(cleanSrc) || cleanSrc.startsWith("/")) {
+    return buildMediaUrl(cleanSrc, variant);
+  }
+
+  if (media.provider === "local") {
+    return `/${[
+      stripEdgeSlashes(media.basePath),
+      stripEdgeSlashes(cleanSrc)
+    ]
+      .filter(Boolean)
+      .join("/")}`;
+  }
+
+  return buildMediaUrl(cleanSrc, variant, {
+    assetFolder: media.assetFolder,
+    deliveryVersion: media.deliveryVersion
+  });
 }
 
 export function buildThumbnailUrl(src: string, options?: ImageUrlOptions): string {
@@ -109,4 +140,18 @@ function normalizeSlashes(src: string): string {
 
 function stripEdgeSlashes(src: string): string {
   return src.replace(/^\/+|\/+$/g, "");
+}
+
+function normalizeDeliveryVersion(version?: string | number): string {
+  if (version === undefined || version === "") {
+    return "";
+  }
+
+  const normalized = String(version).replace(/^v/, "");
+
+  if (!/^\d+$/.test(normalized)) {
+    throw new Error(`Cloudinary delivery version không hợp lệ: ${version}`);
+  }
+
+  return normalized;
 }

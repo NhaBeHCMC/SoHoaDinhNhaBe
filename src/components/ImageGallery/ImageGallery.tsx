@@ -2,16 +2,17 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { buildLargeUrl, buildThumbnailUrl, buildViewerUrl } from "@/lib/image-url";
-import type { MapImage } from "@/types/map";
+import { buildMapMediaUrl } from "@/lib/image-url";
+import type { MapImage, MapMediaConfig } from "@/types/map";
 import styles from "./ImageGallery.module.css";
 
 interface ImageGalleryProps {
   images: MapImage[];
   title: string;
+  media: MapMediaConfig;
 }
 
-export function ImageGallery({ images, title }: ImageGalleryProps) {
+export function ImageGallery({ images, title, media }: ImageGalleryProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const openerRef = useRef<HTMLElement | null>(null);
@@ -39,6 +40,11 @@ export function ImageGallery({ images, title }: ImageGalleryProps) {
       return (index + 1) % images.length;
     });
   }, [images.length]);
+
+  const closeLightbox = useCallback(function closeLightbox() {
+    setActiveIndex(null);
+    window.setTimeout(() => openerRef.current?.focus(), 0);
+  }, []);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -96,11 +102,6 @@ export function ImageGallery({ images, title }: ImageGalleryProps) {
     setActiveIndex(index);
   }
 
-  function closeLightbox() {
-    setActiveIndex(null);
-    window.setTimeout(() => openerRef.current?.focus(), 0);
-  }
-
   function handleLightboxClick(event: React.MouseEvent<HTMLDialogElement>) {
     if (event.target === event.currentTarget) {
       closeLightbox();
@@ -146,8 +147,8 @@ export function ImageGallery({ images, title }: ImageGalleryProps) {
             onClick={(event) => openLightbox(index, event.currentTarget)}
           >
             <FallbackImage
-              src={image.thumbnailSrc ?? buildThumbnailUrl(image.src)}
-              fallbackSrc={buildLargeUrl(image.src)}
+              src={image.thumbnailSrc ?? buildMapMediaUrl(image.src, media, "thumbs")}
+              fallbackSrc={buildMapMediaUrl(image.src, media, "large")}
               alt={image.alt}
               width={320}
               height={220}
@@ -185,8 +186,8 @@ export function ImageGallery({ images, title }: ImageGalleryProps) {
               ) : null}
 
               <FallbackImage
-                src={activeImage.viewerSrc ?? buildViewerUrl(activeImage.src)}
-                fallbackSrc={buildLargeUrl(activeImage.src)}
+                src={activeImage.viewerSrc ?? buildMapMediaUrl(activeImage.src, media, "viewer")}
+                fallbackSrc={buildMapMediaUrl(activeImage.src, media, "large")}
                 alt={activeImage.alt}
                 width={1200}
                 height={900}
@@ -228,11 +229,8 @@ function FallbackImage({
   loading?: "eager" | "lazy";
   priority?: boolean;
 }) {
-  const [currentSrc, setCurrentSrc] = useState(src);
-
-  useEffect(() => {
-    setCurrentSrc(src);
-  }, [src]);
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const currentSrc = failedSrc === src ? fallbackSrc : src;
 
   return (
     <Image
@@ -245,7 +243,7 @@ function FallbackImage({
       unoptimized
       onError={() => {
         if (currentSrc !== fallbackSrc) {
-          setCurrentSrc(fallbackSrc);
+          setFailedSrc(src);
         }
       }}
     />

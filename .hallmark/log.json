@@ -1,5 +1,14 @@
 [
   {
+    "date": "2026-08-25",
+    "scope": "homepage hero",
+    "macrostructure": "Long Document (intro)",
+    "theme": "custom heritage",
+    "theme_axes": "light / roman-serif / warm",
+    "enrichment": "none",
+    "brief": "Remove homepage hero photography and simplify the introduction"
+  },
+  {
     "date": "2026-07-19",
     "scope": "app",
     "macrostructure": "Map / Diagram",

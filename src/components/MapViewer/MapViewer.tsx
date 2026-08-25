@@ -5,7 +5,7 @@ import type { Marker, Map as LeafletMap } from "leaflet";
 import { createHeritageMarkerHtml } from "@/components/HeritageMarker/HeritageMarker";
 import { DetailPanel } from "@/components/DetailPanel/DetailPanel";
 import { ImageGallery } from "@/components/ImageGallery/ImageGallery";
-import { buildMediaUrl } from "@/lib/image-url";
+import { buildMapMediaUrl } from "@/lib/image-url";
 import { normalizedToLeafletLatLng } from "@/lib/map-coordinate";
 import type { MapData, MapLocation } from "@/types/map";
 import styles from "./MapViewer.module.css";
@@ -53,7 +53,7 @@ export function MapViewer({ mapData }: MapViewerProps) {
         attributionControl: false
       });
 
-      L.imageOverlay(buildMediaUrl(mapData.mapImage), bounds).addTo(map);
+      L.imageOverlay(buildMapMediaUrl(mapData.mapImage, mapData.media), bounds).addTo(map);
 
       map.fitBounds(bounds);
       map.setMaxBounds(bounds);
@@ -201,7 +201,9 @@ export function MapViewer({ mapData }: MapViewerProps) {
       </div>
 
       <DetailPanel
+        key={selectedLocation?.id ?? "closed-location"}
         location={selectedLocation}
+        media={mapData.media}
         open={Boolean(selectedLocation)}
         onClose={closeLocationPanel}
       />
@@ -292,7 +294,9 @@ function ResourcePanelView({
                 ) : null}
               </section>
             ))
-          : gallery && <ImageGallery images={gallery.images} title={gallery.title} />}
+          : gallery && (
+              <ImageGallery images={gallery.images} title={gallery.title} media={mapData.media} />
+            )}
       </div>
     </aside>
   );
