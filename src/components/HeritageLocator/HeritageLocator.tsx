@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Map as LeafletMap, Marker } from "leaflet";
 import type { GeolocatedMapSummary } from "@/types/map";
@@ -11,6 +12,7 @@ interface HeritageLocatorProps {
 }
 
 export function HeritageLocator({ sites }: HeritageLocatorProps) {
+  const router = useRouter();
   const mapElementRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LeafletMap | null>(null);
   const markersRef = useRef<Map<string, Marker>>(new Map());
@@ -60,11 +62,7 @@ export function HeritageLocator({ sites }: HeritageLocatorProps) {
           className: styles.markerLabel,
         });
         marker.on("click", () => {
-          window.open(
-            site.geographicLocation.directionsUrl,
-            "_blank",
-            "noopener,noreferrer",
-          );
+          router.push(`/ban-do/${site.slug}`);
         });
         marker.addTo(map);
         markers.set(site.id, marker);
@@ -82,7 +80,7 @@ export function HeritageLocator({ sites }: HeritageLocatorProps) {
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, [sites]);
+  }, [router, sites]);
 
   useEffect(() => {
     if (!activeSite || !mapRef.current) return;
