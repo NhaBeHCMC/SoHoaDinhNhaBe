@@ -21,14 +21,28 @@
   padding-block: var(--space-2xs);
 }
 
-.header[data-compact="true"] .brand img {
+.header[data-compact="true"] .brand {
   width: min(13rem, 56vw);
-  max-height: calc(var(--header-height-compact) - (var(--space-2xs) * 2));
-  object-fit: contain;
 }
 
-.brand { display: inline-flex; min-width: 0; align-items: center; }
-.brand img { width: min(17rem, 65vw); height: auto; }
+.brand {
+  position: relative;
+  display: block;
+  width: min(17rem, 65vw);
+  min-width: 0;
+  /* Crop the transparent canvas around the artwork in the square source file. */
+  aspect-ratio: 353 / 89;
+  overflow: hidden;
+}
+
+.logo {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 141.643%;
+  max-width: none;
+  height: auto;
+  transform: translate(-13.4%, -30%);
+}
 
 .nav { display: none; align-items: center; gap: var(--space-lg); }
 
@@ -125,7 +139,7 @@
 }
 
 @media (min-width: 64rem) {
-  .brand img { width: 20rem; }
+  .brand { width: 20rem; }
   .nav { display: flex; justify-self: end; }
 }
 

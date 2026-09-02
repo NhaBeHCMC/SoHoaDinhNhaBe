@@ -19,10 +19,11 @@ export function SiteHeader({ compact = false }: SiteHeaderProps) {
     <header className={styles.header} data-compact={compact}>
       <Link className={styles.brand} href="/" aria-label="Về trang chủ Hệ thống bản đồ số hóa thông tin di tích các Đình trên địa bàn xã Nhà Bè">
         <Image
+          className={styles.logo}
           src="/logo.png"
           alt="Logo hệ thống số hóa thông tin di tích xã Nhà Bè"
-          width={600}
-          height={149}
+          width={500}
+          height={500}
           priority
         />
       </Link>
