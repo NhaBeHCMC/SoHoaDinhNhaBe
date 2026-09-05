@@ -30,7 +30,7 @@
   display: block;
   width: min(17rem, 65vw);
   min-width: 0;
-  /* Crop the transparent canvas around the artwork in the square source file. */
+  /* Crop the white canvas while keeping every institutional mark visible. */
   aspect-ratio: 353 / 89;
   overflow: hidden;
 }
@@ -38,10 +38,10 @@
 .logo {
   position: absolute;
   inset: 0 auto auto 0;
-  width: 141.643%;
+  width: 100%;
   max-width: none;
   height: auto;
-  transform: translate(-13.4%, -30%);
+  transform: translateY(-26%);
 }
 
 .nav { display: none; align-items: center; gap: var(--space-lg); }

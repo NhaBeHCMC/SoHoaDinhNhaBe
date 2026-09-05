@@ -4,9 +4,9 @@ import "./globals.css";
 
 const siteUrl = getSiteUrl();
 const socialImage = {
-  url: "/cong-trinh-so-hoa-di-tich-dinh-nha-be.jpg",
-  width: 1280,
-  height: 426,
+  url: "/cong-trinh-so-hoa-di-tich-dinh-nha-be.png",
+  width: 2172,
+  height: 724,
   alt: "Công trình số hóa di tích đình tại xã Nhà Bè"
 };
 

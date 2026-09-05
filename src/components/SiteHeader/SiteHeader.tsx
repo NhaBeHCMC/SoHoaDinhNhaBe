@@ -22,9 +22,10 @@ export function SiteHeader({ compact = false }: SiteHeaderProps) {
           className={styles.logo}
           src="/logo.png"
           alt="Logo hệ thống số hóa thông tin di tích xã Nhà Bè"
-          width={500}
-          height={500}
-          priority
+          width={1200}
+          height={630}
+          sizes="(min-width: 1024px) 320px, min(272px, 65vw)"
+          loading="eager"
         />
       </Link>
 
