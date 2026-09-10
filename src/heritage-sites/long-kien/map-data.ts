@@ -1,6 +1,6 @@
 import type { MapData, MapImage, MapLocation } from "@/types/map";
 
-export const LONG_KIEN_SOURCE_MARKER_COUNT = 9;
+export const LONG_KIEN_SOURCE_MARKER_COUNT = 8;
 
 function imagePosition(x: number, yFromTop: number) {
   return {
@@ -118,14 +118,6 @@ const locations: MapLocation[] = [
     position: imagePosition(660, 625),
     description: "Miếu thờ Ông Hổ trong khuôn viên Đình Long Kiển.",
     images: [image("AnhCacBanTho/ONGHO.JPG", "Miếu thờ Ông Hổ", "Miếu thờ Ông Hổ")]
-  },
-  {
-    id: "ban-tho-bac-ho",
-    title: "Bàn thờ Bác Hồ",
-    legacyPosition: { x: 2392000, y: 2330400 },
-    position: imagePosition(720, 235),
-    description: "Bàn thờ Chủ tịch Hồ Chí Minh tại Đình Long Kiển.",
-    images: [image("AnhCacBanTho/HCM.JPG", "Bàn thờ Bác Hồ", "Bàn thờ Bác Hồ")]
   }
 ];
 

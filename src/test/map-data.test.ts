@@ -40,7 +40,7 @@ describe("map data", () => {
     expect(phuXuanMap.locations).toHaveLength(PHU_XUAN_SOURCE_MARKER_COUNT);
   });
 
-  it("keeps the original Long Kien marker and gallery counts", () => {
+  it("keeps the configured Long Kien marker and gallery counts", () => {
     expect(longKienMap.locations).toHaveLength(LONG_KIEN_SOURCE_MARKER_COUNT);
     expect(longKienMap.galleries[0].images).toHaveLength(16);
     expect(longKienMap.galleries[1].images).toHaveLength(12);
